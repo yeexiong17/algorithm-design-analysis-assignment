@@ -12,7 +12,7 @@ using namespace std::chrono;
 int binarySearch(const vector<vector<string>> &data, int low, int high,
                  const string &target) {
   while (low <= high) {
-    int mid = low + (high - low) / 2;
+    int mid = (high + low) / 2;
 
     if (data[mid][0] == target) {
       return mid;
