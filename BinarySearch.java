@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -34,7 +36,6 @@ public class BinarySearch {
     }
 
     public static void main(String[] args) {
-        // Use ArrayList for dynamic sizing
         ArrayList<String[]> dataList = new ArrayList<>();
 
         try {
@@ -65,11 +66,22 @@ public class BinarySearch {
         String lastElement = dataList.get(last)[0];
         long worstCaseTime = measureSearchTime(dataList, lastElement, n);
 
-        System.out.printf("Binary Search Performance Analysis%n%n", n);
-        System.out.printf("Number of searches performed for each case: %d%n%n", n);
-        System.out.printf("Best case (middle element) time: %.6f seconds%n", bestCaseTime / 1_000_000_000.0);
-        System.out.printf("Average case (other element than first, last and middle) time: %.6f seconds%n",
-                averageCaseTime / 1_000_000_000.0);
-        System.out.printf("Worst case (last element) time: %.6f seconds%n", worstCaseTime / 1_000_000_000.0);
+        StringBuilder output = new StringBuilder();
+        output.append("Binary Search Performance Analysis\n\n");
+        output.append(String.format("Number of searches performed for each case: %d\n\n", n));
+        output.append(String.format("Best case (middle element) time: %.6f seconds\n", bestCaseTime / 1_000_000_000.0));
+        output.append(String.format("Average case (other element than first, last and middle) time: %.6f seconds\n",
+                averageCaseTime / 1_000_000_000.0));
+        output.append(String.format("Worst case (last element) time: %.6f seconds\n", worstCaseTime / 1_000_000_000.0));
+
+        try {
+            FileWriter writer = new FileWriter("binary_search_n.txt");
+            writer.write(output.toString());
+            writer.close();
+            System.out.println("Results have been written to binary_search_n.txt");
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to the file.");
+            e.printStackTrace();
+        }
     }
 }
