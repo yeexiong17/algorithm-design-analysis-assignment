@@ -1,0 +1,7 @@
+Binary Search Performance Analysis
+
+Number of searches performed for each case: 10
+
+Best case (middle element) time: 0.000002 seconds
+Average case (other element than first, last and middle) time: 0.000003 seconds
+Worst case (last element) time: 0.000004 seconds

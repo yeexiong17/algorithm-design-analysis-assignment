@@ -19,7 +19,7 @@ public class BinarySearch {
             }
         }
         return -1;
-    }  
+    }
 
     public static void main(String[] args) {
 
@@ -42,5 +42,5 @@ public class BinarySearch {
 
         int result = binarySearch(dataArray, "1000");
         System.out.println(result);
-    }  
+    }
 }
