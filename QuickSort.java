@@ -25,17 +25,21 @@ public class QuickSort {
         bw.close();
     }
 
-    // Partition function with trace
-    public static int partition(List<String[]> data, int low, int high, BufferedWriter writer, int stepCounter[]) throws IOException {
-        long pivot = Long.parseLong(data.get(high)[0]);  // last element as pivot
-        int i = low - 1;
-
+    // Utility method to print subarray in desired format
+    private static String formatSubarray(List<String[]> data, int low, int high) {
         StringBuilder sb = new StringBuilder("[");
-        for (int k = low; k <= high; k++) {
-            sb.append(data.get(k)[0]).append("/").append(data.get(k)[1]);
-            if (k < high) sb.append(", ");
+        for (int i = low; i <= high; i++) {
+            sb.append(data.get(i)[0]).append("/").append(data.get(i)[1]);
+            if (i != high) sb.append(", ");
         }
-        sb.append("] pi=").append(stepCounter[0]++);
+        sb.append("]");
+        return sb.toString();
+    }
+
+    // Partition function with logging
+    public static int partition(List<String[]> data, int low, int high, BufferedWriter writer, int[] stepCounter) throws IOException {
+        long pivot = Long.parseLong(data.get(high)[0]);
+        int i = low - 1;
 
         for (int j = low; j < high; j++) {
             if (Long.parseLong(data.get(j)[0]) <= pivot) {
@@ -45,14 +49,17 @@ public class QuickSort {
         }
         Collections.swap(data, i + 1, high);
 
-        sb.append("[").append(i + 1).append("]");
-        writer.write(sb.toString());
+        // Log current state after partitioning
+        String logLine = "pi=" + stepCounter[0] + " " + formatSubarray(data, low, high);
+        writer.write(logLine);
         writer.newLine();
+        stepCounter[0]++;
+
         return i + 1;
     }
 
-    // Quick sort with tracing
-    public static void quickSortWithTrace(List<String[]> data, int low, int high, BufferedWriter writer, int stepCounter[]) throws IOException {
+    // Recursive quickSort with logging
+    public static void quickSortWithTrace(List<String[]> data, int low, int high, BufferedWriter writer, int[] stepCounter) throws IOException {
         if (low < high) {
             int pi = partition(data, low, high, writer, stepCounter);
             quickSortWithTrace(data, low, pi - 1, writer, stepCounter);
@@ -60,26 +67,47 @@ public class QuickSort {
         }
     }
 
-    // Main function for quick_sort
+    // Main function
     public static void main(String[] args) throws Exception {
         String input = "dataset_sample_1000.csv";
         String output = "quick_sort_1000.csv";
 
+        // Output file for step-by-step trace
+        int startRow = 0;
+        int endRow = 999;  // Adjust based on dataset size
+        String stepOutputFile = "quick_sort_step_" + startRow + "_" + endRow + ".txt";
+
         List<String[]> data = readCSV(input);
 
-        // Measure time
-        long startTime = System.nanoTime();
-        Collections.shuffle(data);  // Ensure unsorted before sorting
-        quickSort(data, 0, data.size() - 1);
-        long endTime = System.nanoTime();
+        // Optional: Shuffle before sorting to ensure unsorted input
+        Collections.shuffle(data);
 
+        // Open writer for step tracing
+        BufferedWriter writer = new BufferedWriter(new FileWriter(stepOutputFile));
+
+        // Print initial array
+        writer.write(formatSubarray(data, startRow, endRow));
+        writer.newLine();
+
+        // Start sorting with step tracking
+        int[] stepCounter = {1};
+        quickSortWithTrace(data, startRow, endRow, writer, stepCounter);
+
+        writer.close();
+
+        // Save final sorted output
         writeSortedData(data, output);
+
+        // Measure time (excluding I/O)
+        long startTime = System.nanoTime();
+        quickSort(data, 0, data.size() - 1);  // Final sort (not logged)
+        long endTime = System.nanoTime();
 
         double durationSeconds = (endTime - startTime) / 1_000_000_000.0;
         System.out.println("Quick Sort completed in " + durationSeconds + " seconds");
     }
 
-    // Actual Quick Sort implementation
+    // Standard Quick Sort implementation
     public static void quickSort(List<String[]> data, int low, int high) {
         if (low < high) {
             int pi = partition(data, low, high);
