@@ -27,18 +27,24 @@ int binarySearch(const vector<vector<string>> &data, int low, int high,
   return -1;
 }
 
-// Measure search time for n iterations
+// Measure search time for n iterations and repeat measurements multiple times
 double measureSearchTime(const vector<vector<string>> &data,
-                         const string &target, int n) {
-  auto start = high_resolution_clock::now();
-
-  for (int i = 0; i < n; i++) {
-    binarySearch(data, 0, data.size() - 1, target);
-  }
-
-  auto stop = high_resolution_clock::now();
-  auto duration = duration_cast<microseconds>(stop - start);
-  return duration.count() / 1000000.0;
+                         const string &target, int n, int repetitions = 5) {
+    double totalTime = 0.0;
+    
+    for (int rep = 0; rep < repetitions; rep++) {
+        auto start = high_resolution_clock::now();
+        
+        for (int i = 0; i < n; i++) {
+            binarySearch(data, 0, data.size() - 1, target);
+        }
+        
+        auto stop = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(stop - start);
+        totalTime += duration.count() / 1000000.0;
+    }
+    
+    return totalTime / repetitions;
 }
 
 int main() {
@@ -57,15 +63,17 @@ int main() {
   MyFile.close();
 
   int n = data.size();
+  const int repetitions = 5;  // Number of times to repeat each measurement
 
   string bestCase = data[n / 2][0];
-  double bestTime = measureSearchTime(data, bestCase, n);
+  double bestTime = measureSearchTime(data, bestCase, n, repetitions);
 
-  string avgCase = data[2][0];
-  double avgTime = measureSearchTime(data, avgCase, n);
+  // Use an element at roughly 1/4 of the array for average case
+  string avgCase = data[n / 4][0];
+  double avgTime = measureSearchTime(data, avgCase, n, repetitions);
 
   string worstCase = data[n - 1][0];
-  double worstTime = measureSearchTime(data, worstCase, n);
+  double worstTime = measureSearchTime(data, worstCase, n, repetitions);
 
   ofstream outFile("binary_search_1000000.txt");
   outFile << "Binary Search Performance Analysis\n\n";
@@ -73,7 +81,7 @@ int main() {
   outFile << "Number of searches performed for each case: " << n << "\n\n";
   outFile << fixed << setprecision(6);
   outFile << "Best case (middle element) time: " << bestTime << " seconds\n";
-  outFile << "Average case (other element than first, last and middle) time: "
+  outFile << "Average case (element at 1/4 of array) time: "
           << avgTime << " seconds\n";
   outFile << "Worst case (last element) time: " << worstTime << " seconds\n";
   outFile.close();
