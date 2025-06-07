@@ -21,14 +21,14 @@ public class QuickSortStep {
         }
 
         String filename = args[0];
-        int start = Integer.parseInt(args[1]);
-        int end = Integer.parseInt(args[2]);
+        int start = Integer.parseInt(args[1])-1;
+        int end = Integer.parseInt(args[2])-1;
 
         List<String[]> data = readCSV(filename);
 
         List<String[]> subList = new ArrayList<>(data.subList(start, end + 1));
 
-        String outputFilename = "quick_sort_step_" + start + "_" + end + ".txt";
+        String outputFilename = "quick_sort_step_" + (start+1) + "_" + (end+1) + ".txt";
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilename));
 
         int[] stepCounter = {0};
