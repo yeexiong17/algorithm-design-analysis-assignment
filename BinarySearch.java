@@ -26,13 +26,19 @@ public class BinarySearch {
         return -1;
     }
 
-    public static long measureSearchTime(ArrayList<String[]> array, String target, int iterations) {
-        long startTime = System.nanoTime();
-        for (int i = 0; i < iterations; i++) {
-            binarySearch(array, target);
+    public static long measureSearchTime(ArrayList<String[]> array, String target, int iterations, int repetitions) {
+        long totalTime = 0;
+        
+        for (int rep = 0; rep < repetitions; rep++) {
+            long startTime = System.nanoTime();
+            for (int i = 0; i < iterations; i++) {
+                binarySearch(array, target);
+            }
+            long endTime = System.nanoTime();
+            totalTime += (endTime - startTime);
         }
-        long endTime = System.nanoTime();
-        return (endTime - startTime) / iterations;
+        
+        return totalTime / repetitions;
     }
 
     public static void main(String[] args) {
@@ -53,26 +59,28 @@ public class BinarySearch {
         }
 
         int n = dataList.size();
+        int repetitions = 5;
 
         int mid = n / 2;
         String middleElement = dataList.get(mid)[0];
-        long bestCaseTime = measureSearchTime(dataList, middleElement, n);
+        long bestCaseTime = measureSearchTime(dataList, middleElement, n, repetitions);
 
         int quarter = n / 4;
         String quarterElement = dataList.get(quarter)[0];
-        long averageCaseTime = measureSearchTime(dataList, quarterElement, n);
+        long averageCaseTime = measureSearchTime(dataList, quarterElement, n, repetitions);
 
         int last = n - 1;
         String lastElement = dataList.get(last)[0];
-        long worstCaseTime = measureSearchTime(dataList, lastElement, n);
+        long worstCaseTime = measureSearchTime(dataList, lastElement, n, repetitions);
 
         StringBuilder output = new StringBuilder();
         output.append("Binary Search Performance Analysis\n\n");
-        output.append(String.format("Number of searches performed for each case: %d\n\n", n));
-        output.append(String.format("Best case (middle element) time: %.6f seconds\n", bestCaseTime / 1_000_000_000.0));
-        output.append(String.format("Average case (other element than first, last and middle) time: %.6f seconds\n",
+        output.append(String.format("Number of searches performed for each case: %d\n", n));
+        output.append(String.format("Number of measurement repetitions: %d\n\n", repetitions));
+        output.append(String.format("Best case (middle element) average time: %.9f seconds\n", bestCaseTime / 1_000_000_000.0));
+        output.append(String.format("Average case (element at 1/4 of array) average time: %.9f seconds\n",
                 averageCaseTime / 1_000_000_000.0));
-        output.append(String.format("Worst case (last element) time: %.6f seconds\n", worstCaseTime / 1_000_000_000.0));
+        output.append(String.format("Worst case (last element) average time: %.9f seconds\n", worstCaseTime / 1_000_000_000.0));
 
         try {
             FileWriter writer = new FileWriter("binary_search_1000000.txt");
