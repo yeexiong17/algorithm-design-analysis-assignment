@@ -49,7 +49,7 @@ int binarySearchWithSteps(const vector<Entry>& data, int target, const string& l
     int left = 0, right = data.size() - 1;
     while (left <= right) {
         int mid = left + (right - left) / 2;
-        log << mid << ": " << data[mid].number << "/" << data[mid].text << "\n";
+        log << (mid+1) << ": " << data[mid].number << "/" << data[mid].text << "\n";
 
         if (data[mid].number == target) {
             log << "Target " << target << " found at index " << mid << "\n";
@@ -60,6 +60,7 @@ int binarySearchWithSteps(const vector<Entry>& data, int target, const string& l
         else
             right = mid - 1;
     }
+    log << "-1\n\n";
     log << "Target " << target << " not found\n";
     return -1;
 }

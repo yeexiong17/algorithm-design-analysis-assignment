@@ -49,7 +49,7 @@ public class BinarySearchStep {
         
         while (left <= right) {
             int mid = left + (right - left) / 2;
-            writer.println(mid + ": " + data[mid].number + "/" + data[mid].text);
+            writer.println((mid+1) + ": " + data[mid].number + "/" + data[mid].text);
             
             if (data[mid].number == target)
                 return mid;
@@ -103,6 +103,7 @@ public class BinarySearchStep {
             System.out.println("Target " + target + " found at index " + foundIndex + 
                              ". Log saved to " + outputFile);
         } else {
+            writer.println("-1\n");
             writer.println("Target " + target + " not found");
             System.out.println("Target " + target + " not found. Log saved to " + outputFile);
         }
