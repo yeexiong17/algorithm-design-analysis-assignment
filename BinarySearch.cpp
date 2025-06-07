@@ -42,7 +42,7 @@ double measureSearchTime(const vector<vector<string>> &data,
 }
 
 int main() {
-  ifstream MyFile("dataset_sample_1000.csv");
+  ifstream MyFile("merge_sort_1000000.csv");
   string line, word;
   vector<vector<string>> data;
 
@@ -67,7 +67,7 @@ int main() {
   string worstCase = data[n - 1][0];
   double worstTime = measureSearchTime(data, worstCase, n);
 
-  ofstream outFile("binary_search_n.txt");
+  ofstream outFile("binary_search_1000000.txt");
   outFile << "Binary Search Performance Analysis\n\n";
 
   outFile << "Number of searches performed for each case: " << n << "\n\n";
@@ -78,7 +78,7 @@ int main() {
   outFile << "Worst case (last element) time: " << worstTime << " seconds\n";
   outFile.close();
 
-  cout << "Results have been written to binary_search_n.txt" << endl;
+  cout << "Results have been written to binary_search_1000000.txt" << endl;
 
   return 0;
 }

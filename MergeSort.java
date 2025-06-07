@@ -13,7 +13,7 @@ public class MergeSort {
     }
     
     public static void main(String[] args) {
-        String inputFile = "dataset_sample_1000.csv";
+        String inputFile = "dataset_1000.csv";
         String outputFile = "merge_sort_1000000.csv";
         List<Data> data = new ArrayList<>();
         

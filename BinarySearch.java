@@ -39,7 +39,7 @@ public class BinarySearch {
         ArrayList<String[]> dataList = new ArrayList<>();
 
         try {
-            File myObj = new File("dataset_sample_1000.csv");
+            File myObj = new File("merge_sort_1000000.csv");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String[] dataArray = myReader.nextLine().split(",");
@@ -75,10 +75,10 @@ public class BinarySearch {
         output.append(String.format("Worst case (last element) time: %.6f seconds\n", worstCaseTime / 1_000_000_000.0));
 
         try {
-            FileWriter writer = new FileWriter("binary_search_n.txt");
+            FileWriter writer = new FileWriter("binary_search_1000000.txt");
             writer.write(output.toString());
             writer.close();
-            System.out.println("Results have been written to binary_search_n.txt");
+            System.out.println("Results have been written to binary_search_1000000.txt");
         } catch (IOException e) {
             System.out.println("An error occurred while writing to the file.");
             e.printStackTrace();

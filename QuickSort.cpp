@@ -82,7 +82,7 @@ void quickSortWithLog(vector<vector<string>>& data, int low, int high, ofstream&
 }
 
 int main() {
-    string input = "dataset_sample_1000.csv";
+    string input = "dataset_1000.csv";
     string output = "quick_sort_1000.csv";
     string stepOutput = "quick_sort_step_0_999.txt"; // adjust start/end rows as needed
 

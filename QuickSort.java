@@ -69,7 +69,7 @@ public class QuickSort {
 
     // Main function
     public static void main(String[] args) throws Exception {
-        String input = "dataset_sample_1000.csv";
+        String input = "dataset_1000.csv";
         String output = "quick_sort_1000.csv";
 
         // Output file for step-by-step trace
