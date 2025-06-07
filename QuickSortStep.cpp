@@ -60,13 +60,13 @@ int main(int argc, char* argv[]) {
     }
 
     string filename = argv[1];
-    int start = stoi(argv[2]);
-    int end = stoi(argv[3]);
+    int start = stoi(argv[2])-1;
+    int end = stoi(argv[3])-1;
 
     vector<vector<string>> data = readCSV(filename);
     vector<vector<string>> subList(data.begin() + start, data.begin() + end + 1);
 
-    string outputFilename = "QuickSortStep" + to_string(start) + "_" + to_string(end) + ".txt";
+    string outputFilename = "QuickSortStep" + to_string(start+1) + "_" + to_string(end+1) + ".txt";
     ofstream outFile(outputFilename);
 
     int stepCount = 0;
