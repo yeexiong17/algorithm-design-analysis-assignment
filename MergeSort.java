@@ -13,16 +13,41 @@ public class MergeSort {
     }
     
     public static void main(String[] args) {
-        String inputFile = "dataset_1000.csv";
-        String outputFile = "merge_sort_1000000.csv";
+        if (args.length < 1 || args.length > 2) {
+            System.err.println("Usage: java MergeSort <input_file> [output_file]");
+            System.err.println("If output_file is not provided, the output will be written to");
+            System.err.println("a file named <input_base>_sorted.csv in the same directory.");
+            System.exit(1);
+        }
+        
+        String inputFile = args[0];
+        String outputFile;
+        
+        if (args.length == 2) {
+            outputFile = args[1];
+        } else {
+           
+            File inFile = new File(inputFile);
+            String baseName = inFile.getName();
+            String nameWithoutExtension;
+            
+            int dotIndex = baseName.lastIndexOf('.');
+            if (dotIndex > 0) {  // remove extension if there no first character after dot
+                nameWithoutExtension = baseName.substring(0, dotIndex);
+            } else {
+                nameWithoutExtension = baseName;
+            }
+            
+            outputFile = new File(inFile.getParent(), nameWithoutExtension + "_sorted.csv").toString();
+        }
+        
         List<Data> data = new ArrayList<>();
         
-        // Read input
+        // read the input
         long readStart = System.nanoTime();
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // Split into number and string parts
                 int commaIndex = line.indexOf(',');
                 if (commaIndex != -1) {
                     try {
@@ -42,7 +67,7 @@ public class MergeSort {
         }
         long readEnd = System.nanoTime();
         
-        // Convert to array for sorting
+        // array converter for sorting
         Data[] arr = data.toArray(new Data[0]);
         
         // Sort and time
@@ -50,7 +75,7 @@ public class MergeSort {
         mergeSort(arr, 0, arr.length - 1);
         long sortEnd = System.nanoTime();
         
-        // Write output
+        // output display
         long writeStart = System.nanoTime();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile))) {
             for (Data item : arr) {
@@ -62,7 +87,7 @@ public class MergeSort {
         }
         long writeEnd = System.nanoTime();
         
-        // Calculate times
+        // Calculate running time
         double readTime = (readEnd - readStart) / 1e6;
         double sortTime = (sortEnd - sortStart) / 1e6;
         double writeTime = (writeEnd - writeStart) / 1e6;
