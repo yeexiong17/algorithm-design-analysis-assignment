@@ -57,9 +57,13 @@ void mergeSort(vector<Data>& arr, int l, int r) {
     }
 }
 
-int main() {
-    const string inputFile = "dataset_sample_1000.csv";
-    const string outputFile = "merge_sort_1000000.csv";
+int main(int argc, char *argv[]) {
+    if (argc != 3) {
+        cerr << "Usage: " << argv[0] << " <input_file> <output_file>\n"; // can alter input/output when to compile the file
+        return 1;
+    }
+    const string inputFile = argv[1];
+    const string outputFile = argv[2];
     vector<Data> data;
     
     // Read input
