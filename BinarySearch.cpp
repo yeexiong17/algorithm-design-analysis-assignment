@@ -47,8 +47,20 @@ double measureSearchTime(const vector<vector<string>> &data,
     return totalTime / repetitions;
 }
 
-int main() {
-  ifstream MyFile("merge_sort_1000000.csv");
+int main(int argc, char* argv[]) {
+  if (argc < 2) {
+    cout << "Usage: " << argv[0] << " <input_csv_file>" << endl;
+    return 1;
+  }
+  
+  string inputFileName = argv[1];
+  ifstream MyFile(inputFileName);
+  
+  if (!MyFile.is_open()) {
+    cout << "Error: Could not open file " << inputFileName << endl;
+    return 1;
+  }
+  
   string line, word;
   vector<vector<string>> data;
 
@@ -75,7 +87,8 @@ int main() {
   string worstCase = data[n - 1][0];
   double worstTime = measureSearchTime(data, worstCase, n, repetitions);
 
-  ofstream outFile("binary_search_1000000.txt");
+  string outputFileName = "binary_search_" + to_string(n) + ".txt";
+  ofstream outFile(outputFileName);
   outFile << "Binary Search Performance Analysis\n\n";
 
   outFile << "Number of searches performed for each case: " << n << "\n\n";
@@ -86,7 +99,7 @@ int main() {
   outFile << "Worst case (last element) time: " << worstTime << " seconds\n";
   outFile.close();
 
-  cout << "Results have been written to binary_search_1000000.txt" << endl;
+  cout << "Results have been written to " << outputFileName << endl;
 
   return 0;
 }

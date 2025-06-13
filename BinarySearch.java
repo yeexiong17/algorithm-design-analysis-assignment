@@ -42,10 +42,16 @@ public class BinarySearch {
     }
 
     public static void main(String[] args) {
+        if (args.length < 1) {
+            System.out.println("Usage: java BinarySearch <input_csv_file>");
+            return;
+        }
+        
+        String inputFileName = args[0];
         ArrayList<String[]> dataList = new ArrayList<>();
 
         try {
-            File myObj = new File("merge_sort_1000000.csv");
+            File myObj = new File(inputFileName);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String[] dataArray = myReader.nextLine().split(",");
@@ -53,7 +59,7 @@ public class BinarySearch {
             }
             myReader.close();
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
+            System.out.println("An error occurred: File not found - " + inputFileName);
             e.printStackTrace();
             return;
         }
@@ -82,11 +88,12 @@ public class BinarySearch {
                 averageCaseTime / 1_000_000_000.0));
         output.append(String.format("Worst case (last element) average time: %.9f seconds\n", worstCaseTime / 1_000_000_000.0));
 
+        String outputFileName = "binary_search_" + n + ".txt";
         try {
-            FileWriter writer = new FileWriter("binary_search_1000000.txt");
+            FileWriter writer = new FileWriter(outputFileName);
             writer.write(output.toString());
             writer.close();
-            System.out.println("Results have been written to binary_search_1000000.txt");
+            System.out.println("Results have been written to " + outputFileName);
         } catch (IOException e) {
             System.out.println("An error occurred while writing to the file.");
             e.printStackTrace();
