@@ -26,7 +26,18 @@ int main(int argc, char* argv[]) {
     }
 
     const int maxValue = 1000000000;
-
+    
+    int n;
+    try {
+        n = stoi(argv[1]);
+        if (n <= 0) {
+            throw invalid_argument("Invalid size");
+        }
+    } catch (...) {
+        cerr << "Error: Dataset size must be a positive integer.\n";
+        return 1;
+    }
+    
     string outputFile = argv[2];
     unordered_set<int> uniqueNumbers;
 
