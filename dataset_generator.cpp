@@ -25,19 +25,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    const int maxSize = 1000000;
     const int maxValue = 1000000000;
-    
-    int n;
-    try {
-        n = stoi(argv[1]);
-        if (n <= 0 || n > maxSize) {
-            throw invalid_argument("Invalid size");
-        }
-    } catch (...) {
-        cerr << "Error: Dataset size must be between 1 and " << maxSize << ".\n";
-        return 1;
-    }
 
     string outputFile = argv[2];
     unordered_set<int> uniqueNumbers;
