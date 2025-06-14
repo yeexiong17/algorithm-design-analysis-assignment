@@ -6,107 +6,84 @@
 
 using namespace std;
 
-struct Entry {
-    int number;
-    string text;
-};
-
-// Custom merge sort
-void merge(vector<Entry>& data, int left, int mid, int right) {
-    vector<Entry> temp(right - left + 1);
-    int i = left, j = mid + 1, k = 0;
-    
-    while (i <= mid && j <= right) {
-        if (data[i].number <= data[j].number)
-            temp[k++] = data[i++];
-        else
-            temp[k++] = data[j++];
-    }
-    
-    while (i <= mid) temp[k++] = data[i++];
-    while (j <= right) temp[k++] = data[j++];
-    
-    for (int x = 0; x < k; ++x)
-        data[left + x] = temp[x];
-}
-
-void mergeSort(vector<Entry>& data, int left, int right) {
-    if (left < right) {
-        int mid = left + (right - left) / 2;
-        mergeSort(data, left, mid);
-        mergeSort(data, mid + 1, right);
-        merge(data, left, mid, right);
-    }
-}
-
-int binarySearchWithSteps(const vector<Entry>& data, int target, const string& logFile) {
+int binarySearchWithSteps(const vector<vector<string>>& data, int low, int high,
+                         const string& target, const string& logFile) {
     ofstream log(logFile);
     if (!log) {
         cerr << "Unable to create log file.\n";
         return -1;
     }
 
-    int left = 0, right = data.size() - 1;
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        log << (mid+1) << ": " << data[mid].number << "/" << data[mid].text << "\n";
+    while (low <= high) {
+        int mid = (high + low) / 2;
+        log << (mid+1) << ": " << data[mid][0] << "/" << data[mid][1] << "\n";
+        
+        cout << "Comparing target: '" << target << "' with data: '" << data[mid][0] << "'" << endl;
 
-        if (data[mid].number == target) {
+        if (data[mid][0] == target) {
             log << "Target " << target << " found at index " << mid << "\n";
             return mid;
         }
-        else if (data[mid].number < target)
-            left = mid + 1;
-        else
-            right = mid - 1;
+
+        if (data[mid][0].compare(target) > 0) {
+            high = mid - 1;
+        } else {
+            low = mid + 1;
+        }
     }
     log << "-1\n\n";
     log << "Target " << target << " not found\n";
     return -1;
 }
 
-vector<Entry> readDataset(const string& filename) {
-    vector<Entry> dataset;
+vector<vector<string>> readDataset(const string& filename) {
+    vector<vector<string>> data;
     ifstream file(filename);
     if (!file) {
         cerr << "Unable to open dataset file.\n";
-        return dataset;
+        return data;
     }
 
-    string line;
+    string line, word;
     while (getline(file, line)) {
+        vector<string> row;
         stringstream ss(line);
-        string numberStr, text;
-        getline(ss, numberStr, ',');
-        getline(ss, text);
-        
-        Entry e;
-        e.number = stoi(numberStr);
-        e.text = text;
-        dataset.push_back(e);
+        while (getline(ss, word, ',')) {
+            word.erase(0, word.find_first_not_of(" \t\r\n"));
+            word.erase(word.find_last_not_of(" \t\r\n") + 1);
+            row.push_back(word);
+        }
+        data.push_back(row);
     }
-    return dataset;
+    return data;
 }
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {
-        cerr << "Usage: " << argv[0] << " <dataset.csv> <target_integer>\n";
+        cerr << "Usage: " << argv[0] << " <dataset.csv> <target>\n";
         return 1;
     }
 
     try {
         string datasetFile = argv[1];
-        int target = stoi(argv[2]);
-        string logFile = "binary_search_step_" + to_string(target) + ".txt";
+        string target = argv[2];
+        target.erase(0, target.find_first_not_of(" \t\r\n"));
+        target.erase(target.find_last_not_of(" \t\r\n") + 1);
+        
+        string logFile = "binary_search_step_" + target + ".txt";
 
-        vector<Entry> data = readDataset(datasetFile);
+        vector<vector<string>> data = readDataset(datasetFile);
         if (data.empty()) {
             cerr << "Dataset is empty or invalid.\n";
             return 1;
         }
 
-        mergeSort(data, 0, data.size() - 1);
-        int foundIndex = binarySearchWithSteps(data, target, logFile);
+        cout << "Dataset size: " << data.size() << endl;
+        cout << "First element: " << data[0][0] << endl;
+        cout << "Last element: " << data[data.size()-1][0] << endl;
+        cout << "Searching for target: " << target << endl;
+
+        int foundIndex = binarySearchWithSteps(data, 0, data.size() - 1, target, logFile);
         
         cout << "Target " << target << (foundIndex != -1 ? 
             " found at index " + to_string(foundIndex) : 
