@@ -6,15 +6,15 @@ public class QuickSort {
     // Read CSV data into a list
     public static List<String[]> readCSV(String filename) throws IOException {
         List<String[]> data = new ArrayList<>();
-        BufferedReader br = new BufferedReader(new FileReader(filename));
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] row = line.split(",", 2); // split only into two parts
-            if (row.length >= 2) {
-                data.add(row);
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] row = line.split(",", 2); // split only into two parts
+                if (row.length >= 2) {
+                    data.add(row);
+                }
             }
         }
-        br.close();
         return data;
     }
 
@@ -31,10 +31,18 @@ public class QuickSort {
     // Utility method to print subarray in desired format
     private static String formatSubarray(List<String[]> data, int low, int high) {
         StringBuilder sb = new StringBuilder("[");
-        for (int i = low; i <= high; i++) {
+        int size = high - low + 1;
+        int limit = Math.min(size, 100); // Only show first 100 elements max
+        
+        for (int i = low; i < low + limit; i++) {
             sb.append(data.get(i)[0]).append("/").append(data.get(i)[1]);
-            if (i != high) sb.append(", ");
+            if (i != low + limit - 1) sb.append(", ");
         }
+        
+        if (size > 100) {
+            sb.append(", ... and ").append(size - 100).append(" more elements");
+        }
+        
         sb.append("]");
         return sb.toString();
     }
