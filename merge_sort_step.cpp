@@ -8,7 +8,7 @@
 
 using namespace std;
 
-// Function to trim whitespace from string
+// Trim whitespace from string
 string trim(const string& str) {
     size_t first = str.find_first_not_of(" \t\n\r\f\v");
     if (first == string::npos) return "";

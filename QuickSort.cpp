@@ -39,7 +39,7 @@ void writeCSV(const vector<vector<string>>& data, const string& filename) {
     }
 }
 
-// Function to log a subarray
+// Log a subarray
 void logSubarray(ofstream& out, const vector<vector<string>>& data, int low, int high) {
     out << "[";
     for (int i = low; i <= high; ++i) {

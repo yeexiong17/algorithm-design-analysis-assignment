@@ -6,6 +6,14 @@
 
 using namespace std;
 
+// Trim whitespace from string
+string trim(const string& str) {
+    size_t first = str.find_first_not_of(" \t\n\r\f\v");
+    if (first == string::npos) return "";
+    size_t last = str.find_last_not_of(" \t\n\r\f\v");
+    return str.substr(first, (last - first + 1));
+}
+
 vector<vector<string>> readCSV(const string& filename) {
     vector<vector<string>> data;
     ifstream file(filename);
@@ -15,23 +23,26 @@ vector<vector<string>> readCSV(const string& filename) {
         string token;
         vector<string> row;
         while (getline(ss, token, ',')) {
-            row.push_back(token);
+            row.push_back(trim(token));
         }
         data.push_back(row);
     }
     return data;
 }
 
-int partitionWithTrace(vector<vector<string>>& data, int low, int high, ofstream& out, int& stepCount) {
+// Print the entire array
+void printArray(const vector<vector<string>>& data, ofstream& out) {
+    out << "[";
+    for (size_t i = 0; i < data.size(); ++i) {
+        out << data[i][0] << "/" << data[i][1];
+        if (i != data.size() - 1) out << ", ";
+    }
+    out << "]";
+}
+
+int partitionWithTrace(vector<vector<string>>& data, int low, int high, ofstream& out) {
     long long pivot = stoll(data[high][0]);
     int i = low - 1;
-
-    out << "[";
-    for (int k = low; k <= high; ++k) {
-        out << data[k][0] << "/" << data[k][1];
-        if (k != high) out << ", ";
-    }
-    out << "] pi=" << stepCount++;
 
     for (int j = low; j < high; ++j) {
         if (stoll(data[j][0]) <= pivot) {
@@ -41,15 +52,19 @@ int partitionWithTrace(vector<vector<string>>& data, int low, int high, ofstream
     }
     swap(data[i + 1], data[high]);
 
-    out << "[" << i + 1 << "]" << endl;
+    // Print the pivot index and the entire array state
+    out << "pi=" << (i + 1) << " ";
+    printArray(data, out);
+    out << endl;
+
     return i + 1;
 }
 
-void quickSortWithTrace(vector<vector<string>>& data, int low, int high, ofstream& out, int& stepCount) {
+void quickSortWithTrace(vector<vector<string>>& data, int low, int high, ofstream& out) {
     if (low < high) {
-        int pi = partitionWithTrace(data, low, high, out, stepCount);
-        quickSortWithTrace(data, low, pi - 1, out, stepCount);
-        quickSortWithTrace(data, pi + 1, high, out, stepCount);
+        int pi = partitionWithTrace(data, low, high, out);
+        quickSortWithTrace(data, low, pi - 1, out);
+        quickSortWithTrace(data, pi + 1, high, out);
     }
 }
 
@@ -64,13 +79,17 @@ int main(int argc, char* argv[]) {
     int end = stoi(argv[3])-1;
 
     vector<vector<string>> data = readCSV(filename);
+    
     vector<vector<string>> subList(data.begin() + start, data.begin() + end + 1);
 
     string outputFilename = "QuickSortStep" + to_string(start+1) + "_" + to_string(end+1) + ".txt";
     ofstream outFile(outputFilename);
 
-    int stepCount = 0;
-    quickSortWithTrace(subList, 0, subList.size() - 1, outFile, stepCount);
+    // Print initial array
+    printArray(subList, outFile);
+    outFile << endl;
+
+    quickSortWithTrace(subList, 0, subList.size() - 1, outFile);
 
     outFile.close();
     cout << "Step-by-step trace written to " << outputFilename << endl;
