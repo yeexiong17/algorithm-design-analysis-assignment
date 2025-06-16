@@ -14,6 +14,17 @@ public class QuickSortStep {
         return data;
     }
 
+    // Utility method to format array for output
+    private static String formatArray(List<String[]> data) {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < data.size(); i++) {
+            sb.append(data.get(i)[0]).append("/").append(data.get(i)[1]);
+            if (i != data.size() - 1) sb.append(", ");
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
     public static void main(String[] args) throws Exception {
         if (args.length < 3) {
             System.out.println("Usage: java QuickSortStep <filename> <start_row> <end_row>");
@@ -30,6 +41,10 @@ public class QuickSortStep {
 
         String outputFilename = "quick_sort_step_" + (start+1) + "_" + (end+1) + ".txt";
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilename));
+
+        // Write initial array state without pi= prefix
+        writer.write(formatArray(subList));
+        writer.newLine();
 
         int[] stepCounter = {0};
 

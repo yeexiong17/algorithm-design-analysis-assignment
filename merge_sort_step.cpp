@@ -6,13 +6,14 @@
 #include <algorithm>
 #include <cctype>
 
+using namespace std;
 struct Data {
     int number;
-    std::string str;
+    string str;
 };
 
-std::string arrayToString(const std::vector<Data>& arr) {
-    std::ostringstream oss;
+string arrayToString(const  vector<Data>& arr) {
+    ostringstream oss;
     oss << "[";
     for (size_t i = 0; i < arr.size(); ++i) {
         if (i > 0) {
@@ -24,10 +25,10 @@ std::string arrayToString(const std::vector<Data>& arr) {
     return oss.str();
 }
 
-void merge(std::vector<Data>& arr, int l, int mid, int r) {
+void merge(vector<Data>& arr, int l, int mid, int r) {
     int n1 = mid - l + 1;
     int n2 = r - mid;
-    std::vector<Data> L(n1), R(n2);
+    vector<Data> L(n1), R(n2);
 
     for (int i = 0; i < n1; i++)
         L[i] = arr[l + i];
@@ -59,7 +60,7 @@ void merge(std::vector<Data>& arr, int l, int mid, int r) {
     }
 }
 
-void mergeSort(std::vector<Data>& arr, int l, int r, std::vector<std::string>& steps) {
+void mergeSort(vector<Data>& arr, int l, int r, vector<string>& steps) {
     if (l < r) {
         int mid = l + (r - l) / 2;
         mergeSort(arr, l, mid, steps);
@@ -71,65 +72,65 @@ void mergeSort(std::vector<Data>& arr, int l, int r, std::vector<std::string>& s
 
 int main(int argc, char* argv[]) {
     if (argc != 4) {
-        std::cerr << "Usage: " << argv[0] << " <file_path> <start_row> <end_row>\n";
+        cerr << "Usage: " << argv[0] << " <file_path> <start_row> <end_row>\n";
         return 1;
     }
 
-    std::string filePath = argv[1];
-    int startRow = std::stoi(argv[2]);
-    int endRow = std::stoi(argv[3]);
+    string filePath = argv[1];
+    int startRow = stoi(argv[2]);
+    int endRow = stoi(argv[3]);
 
-    std::vector<Data> arr;
-    std::ifstream inFile(filePath);
+    vector<Data> arr;
+    ifstream inFile(filePath);
     if (!inFile) {
-        std::cerr << "Error opening file: " << filePath << "\n";
+        cerr << "Error opening file: " << filePath << "\n";
         return 1;
     }
 
-    std::string line;
+    string line;
     int currentRow = 0;
-    while (std::getline(inFile, line)) {
+    while (getline(inFile, line)) {
         currentRow++;
         if (currentRow < startRow) continue;
         if (currentRow > endRow) break;
 
         size_t pos = line.find(',');
-        if (pos != std::string::npos) {
+        if (pos != string::npos) {
             try {
-                int num = std::stoi(line.substr(0, pos));
-                std::string str = line.substr(pos + 1);
+                int num = stoi(line.substr(0, pos));
+                string str = line.substr(pos + 1);
                 arr.push_back({num, str});
             } catch (...) {
-                std::cerr << "Invalid format on line " << currentRow << "\n";
+                cerr << "Invalid format on line " << currentRow << "\n";
             }
         }
     }
     inFile.close();
 
-    std::vector<std::string> steps;
+    vector<string> steps;
     if (!arr.empty()) {
         steps.push_back(arrayToString(arr)); // Initial state
         mergeSort(arr, 0, arr.size() - 1, steps);
     }
 
-    std::string stepFile = "merge_sort_step_" + std::to_string(startRow) + "_" + std::to_string(endRow) + ".txt";
-    std::ofstream stepOut(stepFile);
+    string stepFile = "merge_sort_step_" + to_string(startRow) + "_" + to_string(endRow) + ".txt";
+    ofstream stepOut(stepFile);
     if (stepOut) {
         for (const auto& step : steps) {
             stepOut << step << "\n";
         }
     } else {
-        std::cerr << "Error creating step file\n";
+        cerr << "Error creating step file\n";
     }
 
-    std::string sortedFile = "sorted_segment_" + std::to_string(startRow) + "_" + std::to_string(endRow) + ".csv";
-    std::ofstream sortedOut(sortedFile);
+    string sortedFile = "sorted_segment_" + to_string(startRow) + "_" + to_string(endRow) + ".csv";
+    ofstream sortedOut(sortedFile);
     if (sortedOut) {
         for (const auto& data : arr) {
             sortedOut << data.number << "," << data.str << "\n";
         }
     } else {
-        std::cerr << "Error creating sorted segment file\n";
+        cerr << "Error creating sorted segment file\n";
     }
 
     return 0;

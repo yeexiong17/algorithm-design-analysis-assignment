@@ -28,21 +28,13 @@ public class QuickSort {
         bw.close();
     }
 
-    // Utility method to print subarray in desired format
-    private static String formatSubarray(List<String[]> data, int low, int high) {
+    // Utility method to format the entire array
+    private static String formatArray(List<String[]> data) {
         StringBuilder sb = new StringBuilder("[");
-        int size = high - low + 1;
-        int limit = Math.min(size, 100); // Only show first 100 elements max
-        
-        for (int i = low; i < low + limit; i++) {
+        for (int i = 0; i < data.size(); i++) {
             sb.append(data.get(i)[0]).append("/").append(data.get(i)[1]);
-            if (i != low + limit - 1) sb.append(", ");
+            if (i != data.size() - 1) sb.append(", ");
         }
-        
-        if (size > 100) {
-            sb.append(", ... and ").append(size - 100).append(" more elements");
-        }
-        
         sb.append("]");
         return sb.toString();
     }
@@ -60,8 +52,8 @@ public class QuickSort {
         }
         Collections.swap(data, i + 1, high);
 
-        // Log current state after partitioning
-        String logLine = "pi=" + stepCounter[0] + " " + formatSubarray(data, low, high);
+        // Log current state after partitioning - show complete array with pivot index
+        String logLine = "pi=" + (i + 1) + " " + formatArray(data);
         writer.write(logLine);
         writer.newLine();
         stepCounter[0]++;
@@ -139,12 +131,12 @@ public class QuickSort {
             String stepOutputFile = "quick_sort_step_" + startRow + "_" + endRow + ".txt";
             BufferedWriter writer = new BufferedWriter(new FileWriter(stepOutputFile));
 
-            // Write initial array
-            writer.write(formatSubarray(data, startRow, endRow));
+            // Write initial array without pi= prefix
+            writer.write(formatArray(data));
             writer.newLine();
 
             // Start sorting with step tracking
-            int[] stepCounter = {1};
+            int[] stepCounter = {0};
             quickSortWithTrace(data, startRow, endRow, writer, stepCounter);
             writer.close();
 
