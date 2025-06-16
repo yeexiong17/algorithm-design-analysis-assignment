@@ -7,6 +7,15 @@
 #include <cctype>
 
 using namespace std;
+
+// Function to trim whitespace from string
+string trim(const string& str) {
+    size_t first = str.find_first_not_of(" \t\n\r\f\v");
+    if (first == string::npos) return "";
+    size_t last = str.find_last_not_of(" \t\n\r\f\v");
+    return str.substr(first, (last - first + 1));
+}
+
 struct Data {
     int number;
     string str;
@@ -98,7 +107,7 @@ int main(int argc, char* argv[]) {
         if (pos != string::npos) {
             try {
                 int num = stoi(line.substr(0, pos));
-                string str = line.substr(pos + 1);
+                string str = trim(line.substr(pos + 1));
                 arr.push_back({num, str});
             } catch (...) {
                 cerr << "Invalid format on line " << currentRow << "\n";
@@ -116,9 +125,14 @@ int main(int argc, char* argv[]) {
     string stepFile = "merge_sort_step_" + to_string(startRow) + "_" + to_string(endRow) + ".txt";
     ofstream stepOut(stepFile);
     if (stepOut) {
-        for (const auto& step : steps) {
-            stepOut << step << "\n";
+        // Output all steps in one line, separated by " -> "
+        for (size_t i = 0; i < steps.size(); ++i) {
+            if (i > 0) {
+                stepOut << "\n";
+            }
+            stepOut << steps[i];
         }
+        stepOut << "\n";
     } else {
         cerr << "Error creating step file\n";
     }
