@@ -15,7 +15,7 @@ int binarySearchWithSteps(const vector<vector<string>>& data, int low, int high,
     }
 
     while (low <= high) {
-        int mid = (high + low) / 2;
+        int mid = low + (high - low) / 2;
         log << (mid+1) << ": " << data[mid][0] << "/" << data[mid][1] << "\n";
         
         cout << "Comparing target: '" << target << "' with data: '" << data[mid][0] << "'" << endl;

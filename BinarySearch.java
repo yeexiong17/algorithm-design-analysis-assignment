@@ -12,7 +12,7 @@ public class BinarySearch {
         int right = array.size() - 1;
 
         while (left <= right) {
-            int mid = (right + left) / 2;
+            int mid = left + (right - left) / 2;
 
             if (array.get(mid)[0].equals(target)) {
                 return mid;
@@ -65,15 +65,20 @@ public class BinarySearch {
         }
 
         int n = dataList.size();
-        int repetitions = 5;
+        int repetitions = 1;
 
         int mid = n / 2;
         String middleElement = dataList.get(mid)[0];
         long bestCaseTime = measureSearchTime(dataList, middleElement, n, repetitions);
 
-        int quarter = n / 4;
-        String quarterElement = dataList.get(quarter)[0];
-        long averageCaseTime = measureSearchTime(dataList, quarterElement, n, repetitions);
+        // Calculate average case using multiple elements
+        int[] positions = {n/8, n/6, n/4, n/3, (2*n)/5, (3*n)/5, (2*n)/3, (3*n)/4};
+        long totalAverageCaseTime = 0;
+        for (int pos : positions) {
+            String element = dataList.get(pos)[0];
+            totalAverageCaseTime += measureSearchTime(dataList, element, n, repetitions);
+        }
+        long averageCaseTime = totalAverageCaseTime / positions.length;
 
         int last = n - 1;
         String lastElement = dataList.get(last)[0];
@@ -84,7 +89,7 @@ public class BinarySearch {
         output.append(String.format("Number of searches performed for each case: %d\n", n));
         output.append(String.format("Number of measurement repetitions: %d\n\n", repetitions));
         output.append(String.format("Best case (middle element) average time: %.9f seconds\n", bestCaseTime / 1_000_000_000.0));
-        output.append(String.format("Average case (element at 1/4 of array) average time: %.9f seconds\n",
+        output.append(String.format("Average case (average of elements at 1/8, 1/6, 1/4, 1/3, 2/5, 3/5, 2/3, and 3/4 positions) average time: %.9f seconds\n",
                 averageCaseTime / 1_000_000_000.0));
         output.append(String.format("Worst case (last element) average time: %.9f seconds\n", worstCaseTime / 1_000_000_000.0));
 
