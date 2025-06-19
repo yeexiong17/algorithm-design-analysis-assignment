@@ -124,25 +124,6 @@ public class QuickSort {
         try {
             List<String[]> data = readCSV(inputFile);
 
-            int startRow = 0;
-            int endRow = data.size() - 1;
-
-            // Generate log file name dynamically
-            String stepOutputFile = "quick_sort_step_" + startRow + "_" + endRow + ".txt";
-            BufferedWriter writer = new BufferedWriter(new FileWriter(stepOutputFile));
-
-            // Write initial array without pi= prefix
-            writer.write(formatArray(data));
-            writer.newLine();
-
-            // Start sorting with step tracking
-            int[] stepCounter = {0};
-            quickSortWithTrace(data, startRow, endRow, writer, stepCounter);
-            writer.close();
-
-            // Save final sorted output
-            writeSortedData(data, outputFile);
-
             // Measure time (excluding I/O)
             long startTime = System.nanoTime();
             quickSort(data, 0, data.size() - 1); // Final sort (not logged)
@@ -150,6 +131,10 @@ public class QuickSort {
 
             double durationSeconds = (endTime - startTime) / 1_000_000_000.0;
             System.out.printf("Quick Sort completed in %.6f seconds%n", durationSeconds);
+
+            // Write the sorted data to the output file
+            writeSortedData(data, outputFile);
+            System.out.println("Sorted data written to: " + outputFile);
 
         } catch (IOException e) {
             System.err.println("Error processing files: " + e.getMessage());

@@ -88,19 +88,19 @@ public class MergeSort {
         long writeEnd = System.nanoTime();
         
         // Calculate running time
-        double readTime = (readEnd - readStart) / 1e6;
-        double sortTime = (sortEnd - sortStart) / 1e6;
-        double writeTime = (writeEnd - writeStart) / 1e6;
+        double readTime = (readEnd - readStart) / 1e9;  // Convert to seconds
+        double sortTime = (sortEnd - sortStart) / 1e9;
+        double writeTime = (writeEnd - writeStart) / 1e9;
         double totalTime = readTime + sortTime + writeTime;
         
-        System.out.println("Java Merge Sort Times (ms):");
+        System.out.println("Java Merge Sort Times (seconds):");
         System.out.println("Input file: " + inputFile);
         System.out.println("Output file: " + outputFile);
         System.out.printf("Records processed: %,d%n", arr.length);
-        System.out.printf("Read time: %.3f ms%n", readTime);
-        System.out.printf("Sort time: %.3f ms%n", sortTime);
-        System.out.printf("Write time: %.3f ms%n", writeTime);
-        System.out.printf("Total time: %.3f ms%n", totalTime);
+        System.out.printf("Read time: %.6f s%n", readTime);
+        System.out.printf("Sort time: %.6f s%n", sortTime);
+        System.out.printf("Write time: %.6f s%n", writeTime);
+        System.out.printf("Total time: %.6f s%n", totalTime);
     }
     
     private static void mergeSort(Data[] arr, int l, int r) {

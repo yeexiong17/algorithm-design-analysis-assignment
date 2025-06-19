@@ -4,6 +4,7 @@
 #include <string>
 #include <chrono>
 #include <cctype>
+#include <iomanip>
 
 using namespace std;
 using namespace std::chrono;
@@ -110,17 +111,18 @@ int main(int argc, char *argv[]) {
     auto writeEnd = high_resolution_clock::now();
     
     // Calculate durations
-    auto readDuration = duration_cast<milliseconds>(readEnd - readStart).count();
-    auto sortDuration = duration_cast<milliseconds>(sortEnd - sortStart).count();
-    auto writeDuration = duration_cast<milliseconds>(writeEnd - writeStart).count();
-    auto totalDuration = duration_cast<milliseconds>(writeEnd - readStart).count();
+    auto readDuration = duration_cast<microseconds>(readEnd - readStart).count() / 1e6;
+    auto sortDuration = duration_cast<microseconds>(sortEnd - sortStart).count() / 1e6;
+    auto writeDuration = duration_cast<microseconds>(writeEnd - writeStart).count() / 1e6;
+    auto totalDuration = duration_cast<microseconds>(writeEnd - readStart).count() / 1e6;
     
     // Print timings
     cout << "File: " << inputFile << " (" << data.size() << " records)\n";
-    cout << "Read time: " << readDuration << " ms\n";
-    cout << "Sort time: " << sortDuration << " ms\n";
-    cout << "Write time: " << writeDuration << " ms\n";
-    cout << "Total time: " << totalDuration << " ms\n";
+    cout << fixed << setprecision(6);  // Set precision for floating point output
+    cout << "Read time: " << readDuration << " s\n";
+    cout << "Sort time: " << sortDuration << " s\n";
+    cout << "Write time: " << writeDuration << " s\n";
+    cout << "Total time: " << totalDuration << " s\n";
     
     return 0;
 }
