@@ -34,47 +34,37 @@ string arrayToString(const  vector<Data>& arr) {
     return oss.str();
 }
 
-void merge(vector<Data>& arr, int l, int mid, int r) {
-    int n1 = mid - l + 1;
-    int n2 = r - mid;
-    vector<Data> L(n1), R(n2);
+void merge(vector<Data>& arr, vector<Data>& temp, int l, int mid, int r) {
+    // Left subarray
+    int i = l;
+    // Right subarray
+    int j = mid + 1;
+    int k = l;
 
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[l + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
-
-    int i = 0, j = 0, k = l;
-    while (i < n1 && j < n2) {
-        if (L[i].number <= R[j].number) {
-            arr[k] = L[i];
-            i++;
+    while (i <= mid && j <= r) {
+        if (arr[i].number <= arr[j].number) {
+            temp[k++] = std::move(arr[i++]);
         } else {
-            arr[k] = R[j];
-            j++;
+            temp[k++] = std::move(arr[j++]);
         }
-        k++;
     }
 
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
+    while (i <= mid)
+        temp[k++] = std::move(arr[i++]);
+    while (j <= r)
+        temp[k++] = std::move(arr[j++]);
 
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
+    for (int x = l; x <= r; ++x) {
+        arr[x] = std::move(temp[x]);
     }
 }
 
-void mergeSort(vector<Data>& arr, int l, int r, vector<string>& steps) {
+void mergeSort(vector<Data>& arr, vector<Data>& temp, int l, int r, vector<string>& steps) {
     if (l < r) {
         int mid = l + (r - l) / 2;
-        mergeSort(arr, l, mid, steps);
-        mergeSort(arr, mid + 1, r, steps);
-        merge(arr, l, mid, r);
+        mergeSort(arr, temp, l, mid, steps);
+        mergeSort(arr, temp, mid + 1, r, steps);
+        merge(arr, temp, l, mid, r);
         steps.push_back(arrayToString(arr));
     }
 }
@@ -108,7 +98,7 @@ int main(int argc, char* argv[]) {
             try {
                 int num = stoi(line.substr(0, pos));
                 string str = trim(line.substr(pos + 1));
-                arr.push_back({num, str});
+                arr.push_back({num, std::move(str)});
             } catch (...) {
                 cerr << "Invalid format on line " << currentRow << "\n";
             }
@@ -116,11 +106,13 @@ int main(int argc, char* argv[]) {
     }
     inFile.close();
 
-    vector<string> steps;
+       vector<string> steps;
     if (!arr.empty()) {
         steps.push_back(arrayToString(arr)); // Initial state
-        mergeSort(arr, 0, arr.size() - 1, steps);
+        vector<Data> temp(arr.size());
+        mergeSort(arr, temp, 0, arr.size() - 1, steps);
     }
+
 
     string stepFile = "merge_sort_step_" + to_string(startRow) + "_" + to_string(endRow) + ".txt";
     ofstream stepOut(stepFile);

@@ -14,9 +14,6 @@ struct Data {
 };
 
 void merge(vector<Data>& arr, vector<Data>& temp, int l, int mid, int r) {
-    int n1 = mid - l + 1;
-    int n2 = r - mid;
-
     // Left subarray
     int i = l;
     // Right subarray
