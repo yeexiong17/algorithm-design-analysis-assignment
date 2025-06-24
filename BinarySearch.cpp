@@ -99,7 +99,6 @@ int main(int argc, char* argv[]) {
     outFile << "Binary Search Performance Analysis\n\n";
     
     outFile << "Number of searches performed for each case: " << n << "\n";
-    outFile << "Number of measurement repetitions: " << repetitions << "\n\n";
     outFile << fixed << setprecision(9);
     outFile << "Best case (middle element) average time: " << bestTime << " ms\n";
     outFile << "Average case (average of elements at 1/8, 1/6, 1/4, 1/3, 2/5, 3/5, 2/3, and 3/4 positions) average time: "

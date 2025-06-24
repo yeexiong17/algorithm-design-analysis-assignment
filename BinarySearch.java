@@ -87,7 +87,6 @@ public class BinarySearch {
         StringBuilder output = new StringBuilder();
         output.append("Binary Search Performance Analysis\n\n");
         output.append(String.format("Number of searches performed for each case: %d\n", n));
-        output.append(String.format("Number of measurement repetitions: %d\n\n", repetitions));
         output.append(String.format("Best case (middle element) average time: %.6f milliseconds\n", bestCaseTime / 1_000_000.0));
         output.append(String.format("Average case (average of elements at 1/8, 1/6, 1/4, 1/3, 2/5, 3/5, 2/3, and 3/4 positions) average time: %.6f milliseconds\n",
                 averageCaseTime / 1_000_000.0));
