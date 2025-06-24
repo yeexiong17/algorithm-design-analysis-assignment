@@ -3,7 +3,6 @@
 #include <vector>
 #include <string>
 #include <chrono>
-#include <cctype>
 #include <iomanip>
 
 using namespace std;
@@ -14,47 +13,40 @@ struct Data {
     string str;
 };
 
-void merge(vector<Data>& arr, int l, int mid, int r) {
+void merge(vector<Data>& arr, vector<Data>& temp, int l, int mid, int r) {
     int n1 = mid - l + 1;
     int n2 = r - mid;
-    vector<Data> L(n1), R(n2);
 
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[l + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
+    // Left subarray
+    int i = l;
+    // Right subarray
+    int j = mid + 1;
+    int k = l;
 
-    int i = 0, j = 0, k = l;
-    while (i < n1 && j < n2) {
-        if (L[i].number <= R[j].number) {
-            arr[k] = L[i];
-            i++;
+    while (i <= mid && j <= r) {
+        if (arr[i].number <= arr[j].number) {
+            temp[k++] = std::move(arr[i++]);
         } else {
-            arr[k] = R[j];
-            j++;
+            temp[k++] = std::move(arr[j++]);
         }
-        k++;
     }
 
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
+    while (i <= mid)
+        temp[k++] = std::move(arr[i++]);
+    while (j <= r)
+        temp[k++] = std::move(arr[j++]);
 
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
+    for (int x = l; x <= r; ++x) {
+        arr[x] = std::move(temp[x]);
     }
 }
 
-void mergeSort(vector<Data>& arr, int l, int r) {
+void mergeSort(vector<Data>& arr, vector<Data>& temp, int l, int r) {
     if (l < r) {
         int mid = l + (r - l) / 2;
-        mergeSort(arr, l, mid);
-        mergeSort(arr, mid + 1, r);
-        merge(arr, l, mid, r);
+        mergeSort(arr, temp, l, mid);
+        mergeSort(arr, temp, mid + 1, r);
+        merge(arr, temp, l, mid, r);
     }
 }
 
@@ -82,7 +74,7 @@ int main(int argc, char *argv[]) {
             try {
                 int num = stoi(line.substr(0, pos));
                 string str = line.substr(pos + 1);
-                data.push_back({num, str});
+                data.push_back({num, std::move(str)});
             } catch (...) {
                 cerr << "Error parsing line: " << line << endl;
             }
@@ -93,7 +85,8 @@ int main(int argc, char *argv[]) {
     
     // Sort data
     auto sortStart = high_resolution_clock::now();
-    mergeSort(data, 0, data.size() - 1);
+    vector<Data> temp(data.size());
+    mergeSort(data, temp, 0, data.size() - 1);
     auto sortEnd = high_resolution_clock::now();
     
     // Write output
