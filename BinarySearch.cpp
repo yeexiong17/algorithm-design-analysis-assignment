@@ -29,18 +29,23 @@ int binarySearch(const vector<string>& data, int low, int high, const string& ta
 
 double measureSearchTime(const vector<string>& data, const string& target, int n, int repetitions) {
     double totalTime = 0.0;
+    volatile int dummy = 0;
     
     for (int rep = 0; rep < repetitions; rep++) {
         auto start = high_resolution_clock::now();
         
+        volatile int result = 0;
         for (int i = 0; i < n; i++) {
-            binarySearch(data, 0, data.size() - 1, target);
+            result += binarySearch(data, 0, data.size() - 1, target);
         }
+
+        if (result == -123456789) std::cout << "";
         
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);
-        double timeInSeconds = duration.count() / 1000000.0;
-        totalTime += timeInSeconds;
+        totalTime += duration.count() / 1000.0;
+
+        if (dummy == -123456789) cout << "";
     }
     
     return totalTime / repetitions;
@@ -96,10 +101,10 @@ int main(int argc, char* argv[]) {
     outFile << "Number of searches performed for each case: " << n << "\n";
     outFile << "Number of measurement repetitions: " << repetitions << "\n\n";
     outFile << fixed << setprecision(9);
-    outFile << "Best case (middle element) average time: " << bestTime << " seconds\n";
+    outFile << "Best case (middle element) average time: " << bestTime << " ms\n";
     outFile << "Average case (average of elements at 1/8, 1/6, 1/4, 1/3, 2/5, 3/5, 2/3, and 3/4 positions) average time: "
-            << avgTime << " seconds\n";
-    outFile << "Worst case (last element) average time: " << worstTime << " seconds\n";
+            << avgTime << " ms\n";
+    outFile << "Worst case (last element) average time: " << worstTime << " ms\n";
     outFile.close();
     
     cout << "Results have been written to " << outputFileName << endl;
