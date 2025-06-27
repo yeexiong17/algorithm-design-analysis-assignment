@@ -25,7 +25,6 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    const int maxValue = 1000000000;
     
     int n;
     try {
@@ -41,9 +40,11 @@ int main(int argc, char* argv[]) {
     string outputFile = argv[2];
     unordered_set<int> uniqueNumbers;
 
+    const int maxValue = 1000000000;
+
     random_device rd;
     minstd_rand rng(rd());
-    uniform_int_distribution<int> dist(1, maxValue);
+    uniform_int_distribution<int> dist(0, maxValue);
 
     cout << "Generating " << n << " unique random integers...\n";
     while (uniqueNumbers.size() < n) {
